@@ -10,6 +10,7 @@ import {
   Button,
   Typography,
 } from "@mui/material";
+import Toast from "./Toast";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 const AddProducts = () => {
   const [categories, setCategories] = useState([]);
@@ -18,6 +19,8 @@ const AddProducts = () => {
   const [productName, setProductName] = useState("");
   const [productPrice, setProductPrice] = useState("");
   const [ancestorCategories, setAncestorCategories] = useState([]);
+  const [toastMessage, setToastMessage] = useState("");
+
   //Fetch Default Data
   useEffect(() => {
     axiosInstance
@@ -60,10 +63,15 @@ const AddProducts = () => {
         price: productPrice,
       })
       .then((response) => {
-        console.log("Product created successfully:", response.data);
+        if (response.data.message === "Product created successfully") {
+          setToastMessage(
+            `Product ${response.data.product.name} Added successfully!`
+          );
+        }
         setProductName("");
         setProductPrice("");
-        setAncestorCategories([]); // Reset ancestor categories
+        setAncestorCategories([]);
+        setSelectedCategoryNames([]);
       })
       .catch((error) => {
         console.error("Error creating product:", error);
@@ -78,6 +86,22 @@ const AddProducts = () => {
         alignItems: "center",
       }}
     >
+      {toastMessage && (
+        <Toast message={toastMessage} onClose={() => setToastMessage("")} />
+      )}
+      <Typography
+        sx={{
+          backgroundImage: "linear-gradient(to top, #8B8B8B, #534A85)",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          fontFamily: "monospace",
+          fontWeight: 1000,
+          marginBottom: 2,
+          fontSize: { xs: "25px", md: "40px" },
+        }}
+      >
+        PRODUCT MANAGEMENT
+      </Typography>
       <Box
         sx={{
           marginBottom: 1,

@@ -10,6 +10,7 @@ import {
   Button,
   Typography,
 } from "@mui/material";
+import Toast from "./Toast";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
 const AddCategory = () => {
@@ -17,6 +18,7 @@ const AddCategory = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedCategoryNames, setSelectedCategoryNames] = useState([]);
   const [categoryName, setCategoryName] = useState("");
+  const [toastMessage, setToastMessage] = useState("");
 
   //Fetch Default Category
   useEffect(() => {
@@ -57,6 +59,13 @@ const AddCategory = () => {
         parentCategoryId: selectedCategory || null,
       })
       .then((response) => {
+        console.log(response.data);
+        if (response.statusText === "Created") {
+          setToastMessage(
+            `Category ${response.data.name} created successfully!`
+          );
+        }
+        setSelectedCategoryNames([]);
         setCategoryName("");
         axiosInstance
           .get("/category/getCategories")
@@ -75,12 +84,28 @@ const AddCategory = () => {
   return (
     <Box
       sx={{
-        marginTop: "120px",
+        marginTop: "100px",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
       }}
     >
+      {toastMessage && (
+        <Toast message={toastMessage} onClose={() => setToastMessage("")} />
+      )}
+      <Typography
+        sx={{
+          backgroundImage: "linear-gradient(to top, #8B8B8B, #534A85)",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          fontFamily: "monospace",
+          fontWeight: 1000,
+          marginBottom: 2,
+          fontSize: { xs: "25px", md: "40px" },
+        }}
+      >
+        CATEGORY MANAGEMENT
+      </Typography>
       <Box
         sx={{
           marginBottom: 4,
@@ -136,8 +161,8 @@ const AddCategory = () => {
                   fontSize: "0.8rem",
                   minWidth: "80px",
                   minHeight: "30px",
-                  marginRight:'5px',
-                  color:'#000000'
+                  marginRight: "5px",
+                  color: "#000000",
                 }}
               >
                 {name}
