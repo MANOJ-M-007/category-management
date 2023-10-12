@@ -72,6 +72,14 @@ const AddProducts = () => {
         setProductPrice("");
         setAncestorCategories([]);
         setSelectedCategoryNames([]);
+        axiosInstance
+          .get("/category/getCategories")
+          .then((response) => {
+            setCategories(response.data);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
       })
       .catch((error) => {
         console.error("Error creating product:", error);
